@@ -72,4 +72,3 @@ $html .= '</table>
 
 // Вывод HTML-страницы
 echo $html;
-?>
