@@ -1,59 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Умножение чисел в столбик</title>
+    <title>Умножение двух чисел</title>
 </head>
 <body>
-    <h1>Результат умножения</h1>
+    <h2>Умножение чисел</h2>
+    <form method="post">
+        <label for="num1">1-ое число:</label>
+        <input type="number" id="num1" name="num1" required>
+        <br>
+        <label for="num2">2-ое число:</label>
+        <input type="number" id="num2" name="num2" required>
+        <br>
+        <button type="submit">Умножить</button>
+    </form>
+
     <?php
     if(isset($_POST['num1']) && isset($_POST['num2'])) {
         $num1 = $_POST['num1'];
         $num2 = $_POST['num2'];
         $result = $num1 * $num2;
 
-        echo "<p>Первое число: $num1</p>";
-        echo "<p>Второе число: $num2</p>";
-        echo "<hr>";
-        echo "<p>Процесс умножения:</p>";
+        $num1_str = (string)$num1;
+        $num2_str = (string)$num2;
+        $result_str = (string)$result;
 
-        $digits1 = str_split(strrev($num1));
-        $digits2 = str_split(strrev($num2));
+        $num1_len = strlen($num1_str);
+        $num2_len = strlen($num2_str);
+        $result_len = strlen($result_str);
 
-        $lines = array();
+        $max_len = max($num1_len, $num2_len, $result_len);
 
-        foreach ($digits2 as $i => $digit2) {
-            $line = "";
-            $carry = 0;
-
-            for ($j = 0; $j < $i; $j++) {
-                $line .= " ";
-            }
-
-            foreach ($digits1 as $digit1) {
-                $product = $digit1 * $digit2 + $carry;
-                $line .= $product % 10;
-                $carry = floor($product / 10);
-            }
-
-            if ($carry > 0) {
-                $line .= $carry;
-            }
-
-            $lines[] = strrev($line);
+        echo "<h3>Результат :</h3>";
+        echo "<pre>";
+        echo str_repeat(" ", $max_len - $num1_len) . $num1 . "\n";
+        echo str_repeat(" ", $max_len - $num2_len) . $num2 . "\n";
+        echo str_repeat("-", $max_len) . "\n";
+        for ($i = $num2_len - 1; $i >= 0; $i--) {
+            $digit2 = $num2_str[$i];
+            $temp_result = $num1 * $digit2 * pow(10, $num2_len - $i - 1);
+            echo str_repeat(" ", $max_len - strlen($temp_result)) . $temp_result . "\n";
         }
-
-        $totalLines = count($lines);
-
-        foreach ($lines as $i => $line) {
-            echo $line;
-
-            if ($i < $totalLines - 1) {
-                echo "<br>";
-            }
-        }
-
-        echo "<hr>";
-        echo "<p>Результат: $result</p>";
+        echo str_repeat("-", $max_len) . "\n";
+        echo $result . "\n";
+        echo "</pre>";
     }
     ?>
 </body>
